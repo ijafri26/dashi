@@ -6,7 +6,7 @@ import dash_html_components as html
 import dash.dependencies as dep
 import dash_table as dt
 import pandas
-import plotly.plotly as plotly
+import chart_studio.plotly as plotly
 import plotly.graph_objs as go
 import numpy as np
 import urllib
@@ -144,7 +144,7 @@ def update_title(lane_value, run_value):
     [dep.Output('Summary Table', 'columns'),
      dep.Output('Summary Table', 'data'),
      dep.Output('Summary Table', 'style_data_conditional'),
-     dep.Output('Summary Table', 'n_fixed_columns'),
+     dep.Output('Summary Table', 'fixed_columns'),
      dep.Output('download-link', 'href'),
      dep.Output('download-link', 'download')],
     [dep.Input('select_a_run', 'value'),
@@ -179,19 +179,19 @@ def Summary_table(run_alias, lane_alias):
         'backgroundColor': 'rgb(222, 222, 222)'
     },
         {'if': {'column_id': '% Mapped to Coding',
-                'filter': '0 < {% Mapped to Coding} < 20'},
+                'filter_query': '0 < {% Mapped to Coding} < 20'},
          'backgroundColor': 'rgb(219, 75, 75)'},
         {'if': {'column_id': '% Mapped to Intronic',
-                'filter': '0 < {% Mapped to Intronic} < 15'},
+                'filter_query': '0 < {% Mapped to Intronic} < 15'},
          'backgroundColor': 'rgb(219, 75, 75)'},
         {'if': {'column_id': '% Mapped to Intergenic',
-                'filter': '0 < {% Mapped to Intergenic} < 15'},
+                'filter_query': '0 < {% Mapped to Intergenic} < 15'},
          'backgroundColor': 'rgb(219, 75, 75)'},
     ]
     downloadtimedate = datetime.today().strftime('%Y-%m-%d')
     download = 'PoolQC_%s_%s_%s.csv' % (downloadtimedate, run_alias, lane_alias)
 
-    return columns, data, style_data_conditional, 2, csv, download
+    return columns, data, style_data_conditional, {'headers': True, 'data':2}, csv, download
 
 
 def update_sampleindices(run, rows, derived_virtual_selected_rows, colors):
